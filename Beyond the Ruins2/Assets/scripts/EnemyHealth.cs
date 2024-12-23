@@ -1,21 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField] int startingHealth = 5;
+    [SerializeField] GameObject robotExplosionVFX;
+    [SerializeField] int startingHealth = 3;
+
     int currentHealth;
-    void Awake()
+
+
+
+    void Awake() 
     {
         currentHealth = startingHealth;
     }
-    public void TakeDamage(int amount)
+
+    void Start()
     {
-        currentHealth -= amount;  
-        if(currentHealth <= 0) 
+       
+    }
+
+    public void TakeDamage(int amount) 
+    {
+        currentHealth -= amount;
+
+        if (currentHealth <= 0)
         {
-            Destroy(this.gameObject);
+        
+            SelfDestruct();
         }
+    }
+
+    public void SelfDestruct()
+    {
+        Instantiate(robotExplosionVFX, transform.position, Quaternion.identity);
+        Destroy(this.gameObject);
     }
 }
