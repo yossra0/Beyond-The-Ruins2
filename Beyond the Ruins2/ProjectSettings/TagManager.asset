@@ -3,17 +3,28 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CinemachineTarget
+  - heal
+  - enemy
+  - Collect
+  - Bullet
+  - PickUp
+  - star
+  - Star
+  - Damage
+  - damage
+  - obstacle
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Enemy
+  - Weapon Layer
+  - Ground
   - 
   - 
   - 
