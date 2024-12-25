@@ -12,6 +12,9 @@ TagManager:
   - PickUp
   - star
   - Star
+  - Damage
+  - damage
+  - obstacle
   layers:
   - Default
   - TransparentFX

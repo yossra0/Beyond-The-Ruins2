@@ -27,4 +27,12 @@ public class star : MonoBehaviour
        }
     }
  } 
+ private void OnCollisionEnter(Collision other)
+ {
+   if (other.gameObject.CompareTag("obstacle"))
+   {
+      SceneManager.LoadScene("Lose");
+   }
+ }
 }
+
