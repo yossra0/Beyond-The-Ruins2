@@ -1,68 +1,72 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement; // لإدارة المشاهد
+using UnityEngine.UI; // لإضافة دعم للسلايدر
 
-public class HealthSystem : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health System")]
-    public float healthPoints;
-    public float maxHealth;
+    public float health = 100f; // الصحة الأولية للاعب
+    public float healthThreshold = 20f; // العتبة التي عندها يتم الانتقال إلى سيناريو "اللوز"
+    public string nextSceneName = "Loss"; // اسم المشهد الذي سيتم الانتقال إليه عند انخفاض الصحة
+    public Slider healthSlider; // السلايدر لعرض الصحة
+    public float lerpSpeed = 2f; // سرعة الانتقال التدريجي للسلايدر
 
-    // Unity's start method to initialize health
+    private float targetHealth; // الهدف المستقبلي للصحة لتحديث السلايدر
+    Rigidbody PlayerRigidbody;
+
+    // Start is called before the first frame update
     void Start()
     {
-        // Initialize health points based on maxHealth
-        healthPoints = maxHealth;
+        // تحديث السلايدر عند بدء اللعبة
+       healthSlider.value = health;
+       PlayerRigidbody = GetComponent<Rigidbody>();
     }
 
-    // Method to get current health points
-    public float GetHealth()
-    {
-        return healthPoints;
-    }
-
-    // Method to get health percentage (0 - 1 scale)
-    public float GetHealthPercentage()
-    {
-        return healthPoints / maxHealth;
-    }
-
-    // Method to apply damage
-    public void Damage(float damageAmount)
-    {
-        healthPoints -= damageAmount;
-
-        // Ensure health doesn't go below 0
-        if (healthPoints <= 0) 
+    // Update is called once per frame
+    void Update()
+    { if (healthSlider != null)
         {
-            healthPoints = 0;
-            // Trigger death (optional)
+            healthSlider.maxValue = 100f;
+            healthSlider.value = health;
+            targetHealth = health; // تعيين القيمة الابتدائية
+        }
+        // تحديث السلايدر تدريجياً نحو الصحة المستهدفة
+        if (healthSlider != null)
+        {
+            healthSlider.value = Mathf.Lerp(healthSlider.value, targetHealth, Time.deltaTime * lerpSpeed);
+        }
+    }
+
+    // دالة لتطبيق الضرر
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        targetHealth = Mathf.Clamp(health, 0, 100); // تأكد أن الصحة بين 0 و 100
+        Debug.Log("Player Health: " + health);
+
+        // إذا كانت الصحة أقل من أو تساوي العتبة المحددة، يتم الانتقال إلى سيناريو "اللوز"
+        if (health <= healthThreshold)
+        {
+            GoToNextScene();
+        }
+
+        // إذا كانت الصحة صفر أو أقل، يمكن تنفيذ منطق الموت هنا
+        if (health <= 0)
+        {
             Die();
         }
-
-        // You can add a callback or event here for when the health changes
-        Debug.Log("Player took damage! Current Health: " + healthPoints);
     }
 
-    // Method to heal the player
-    public void Heal(float healAmount)
-    {
-        healthPoints += healAmount;
-
-        // Ensure health doesn't exceed maxHealth
-        if (healthPoints > maxHealth)
-        {
-            healthPoints = maxHealth;
-        }
-
-        // You can add a callback or event here for when health changes
-        Debug.Log("Player healed! Current Health: " + healthPoints);
-    }
-
-    // Optional method to handle death logic
+    // دالة للموت (يمكنك تخصيصها حسب الحاجة)
     private void Die()
     {
-        // You can trigger death logic here like playing animations, restarting the game, etc.
         Debug.Log("Player has died!");
+        // يمكنك هنا تنفيذ منطق الموت مثل تفعيل شاشة النهاية أو إعادة تحميل المشهد
+    }
+
+    // دالة للانتقال إلى المشهد التالي
+    private void GoToNextScene()
+    {
+        // الانتقال إلى المشهد التالي الذي تم تحديده في `nextSceneName`
+        SceneManager.LoadScene(nextSceneName);
     }
 }

@@ -7,6 +7,11 @@ TagManager:
   - CinemachineTarget
   - heal
   - enemy
+  - Collect
+  - Bullet
+  - PickUp
+  - star
+  - Star
   layers:
   - Default
   - TransparentFX
